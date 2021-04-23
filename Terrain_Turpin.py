@@ -4,17 +4,16 @@ import random as rd
 # Définition des constantes #
 
 LARGEUR, HAUTEUR = 500, 500
-TAILLE_CASE = 2z0
+TAILLE_CASE = 10
 
 # Définition des variables globales #
 
 cases = []
 
-
-T = 5 
-p = 50 
-n = 4 
-k = 1 
+T = 5
+p = 50
+n = 4
+k = 1
 
 racine = tk.Tk()
 
@@ -46,7 +45,6 @@ def couleur(lieu):
         return "#1D87E0"
 
 
-
 def refresh():
     """Redessine le terrain."""
     for i in range(HAUTEUR // TAILLE_CASE):
@@ -68,11 +66,12 @@ def generer_terrain_initial():
              for i in range(HAUTEUR // TAILLE_CASE)]
     refresh()
 
-def moore (i, j):
+
+def moore(i, j):
     pass
 
 
-def automate ():
+def automate():
     pass
 
 
@@ -89,11 +88,33 @@ def deplacement():
 
 
 def sauvegarde_terrain():
-    pass
+    fic = open("sauvegarde.txt", "w")
+    for i in range(len(cases)):
+        for j in range(len(cases[i])):
+            if cases[i][j] == ["eau"]:
+                fic.write("0")
+            elif cases[i][j] == ["terre"]:
+                fic.write("1")
+        fic.write("/")
+    fic.close()
+
 
 def charger_terrain():
-    pass
-
+    global cases
+    cases = []
+    sous_liste = []
+    fic = open("sauvegarde.txt", "r")
+    lignes = fic.readline()
+    for i in range(len(lignes)):
+        if lignes[i] == "0":
+            sous_liste.append(["eau"])
+        elif lignes[i] == "1":
+            sous_liste.append(["terre"])
+        else:
+            cases.append(sous_liste)
+            sous_liste = []
+    fic.close()
+    refresh()
 
 
 #def etape_suivante():
@@ -135,16 +156,18 @@ def charger_terrain():
 # Programme principal #
 
 #Bon là tout ça faudra changer mais là j'ai eu la flemme
+
+
 bouton1 = tk.Button(racine, text="Génération de terrain aléatoire",
                     font=("helvetica", "10"), command=generer_terrain_initial)
 bouton1.place(x=0, y=100)
 
 bouton2 = tk.Button(racine, text="Sauvegarde du terrain",
-                    font=("helvetica", "10"))
+                    font=("helvetica", "10"), command=sauvegarde_terrain)
 bouton2.place(x=0, y=130)
 
 bouton3 = tk.Button(racine, text="Charger un terrain",
-                    font=("helvetica", "10"))
+                    font=("helvetica", "10"), command=charger_terrain)
 bouton3.place(x=0, y=160)
 
 #bouton4 = tk.Button(racine, text="Prochaine étape",
