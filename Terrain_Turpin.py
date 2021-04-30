@@ -68,8 +68,48 @@ def generer_terrain_initial():
 
 
 def moore(i, j):
-    pass
+    def moore (i, j):
+    # Premier essai de moore, je sais pas si je dois check avec case[i][j] ou juste avec i et j comme coordonnées, au final ca reviendra au même c'est juste une forêt de if.
+    #Je viens de me rendre compte que j'ai aucune idée d'ou est stockée T, je laisse ma fonction dans le doute, je la changerais quand je saurais ou sont stocké les T.
+    if case[i-1][j-1] >= 5:
+        case[i][j][0] = "#1D87E0" # Je sais pas non plus si c'est a moi de faire cette modif ou à l'automate, dans le doute je l'ai fait au pire on aura juste a modifier ces lignes de code par automate().
+    else:
+        case[i][j][0] = "#157120"
 
+    if case[i][j-1] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
+
+    if case[i+1][j-1] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
+
+    if case[i -1][j] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
+
+    if case[i+1][j] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
+        
+    if case[i-1][j+1] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
+
+    if case[i][j+1] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
+
+    if case[i+1][j+1] >= 5:
+        case[i][j][0] = "#1D87E0"
+    else:
+        case[i][j][0] = "#157120"
 
 def automate():
     pass
