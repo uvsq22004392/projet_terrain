@@ -129,6 +129,16 @@ def moore(i, j):
     else:
         cases[i][j][0] = "#157120"
 
+    if cases[i][j+1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i+1][j+1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
 
 def automate():
     pass
