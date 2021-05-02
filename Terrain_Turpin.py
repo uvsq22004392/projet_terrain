@@ -1,4 +1,4 @@
-######################################
+################################################
 # Groupe BI 2
 # Lenny BACKORY
 # Andrew BAYISSA
@@ -6,8 +6,8 @@
 # Martin DIAMANT
 # Amel LASSAL
 # Thomas TURPIN
-# https://github.com/uvsq22004392/projet_incendie
-######################################
+# https://github.com/uvsq22004392/projet_terrain
+################################################
 
 # Importation des libraires #
 
@@ -69,79 +69,44 @@ def refresh():
                                     width=0)
 
 
-def generer_terrain_initial():
-    """Fonctions proba_eau() puis refresh()."""
+def moore(i, j):
+    """Vérifie le nombre de voisins."""
+    global cases
+    MOORE = 0
+    for a in range(-k, k + 1):
+        for b in range(-k, k + 1):
+            # Evite d'aller out of range
+            if (i + a) <= 0 or (i + a) >= len(cases):
+                pass
+            elif (j + b) <= 0 or (j + b) >= len(cases[i]):
+                pass
+            elif cases[i + a][j + b] == ["eau"]:
+                MOORE += 1
+    return MOORE
+
+
+def automate():
+    """Vérifie le nombre de voisins avec moore(i, j) de toutes les cases."""
+    global cases
+    cases_tempo = [[[] for i in range(LARGEUR // TAILLE_CASE)]
+                   for i in range(HAUTEUR // TAILLE_CASE)]
+    for i in range(len(cases)):
+        for j in range(len(cases[i])):
+            if moore(i, j) >= T:
+                cases_tempo[i][j] = ["eau"]
+            else:
+                cases_tempo[i][j] = ["terre"]
+    cases = list(cases_tempo)
+    refresh()  # Ici et pas dans generer_terrain pour pouvoir tester
+
+
+def generer_terrain():
+    """Fonctions proba_eau() puis automate() puis refresh()."""
     global cases
     cases = []
     cases = [[proba_eau() for i in range(LARGEUR // TAILLE_CASE)]
              for i in range(HAUTEUR // TAILLE_CASE)]
-    refresh()
-
-
-def moore(i, j):
-    # Premier essai de moore, je sais pas si je dois check avec case[i][j]
-    # ou juste avec i et j comme coordonnées,
-    # au final ca reviendra au même c'est juste une forêt de if.
-
-    # Je viens de me rendre compte que j'ai aucune idée d'ou est stockée T,
-    # je laisse ma fonction dans le doute, je la changerais
-    # quand je saurais ou sont stocké les T.
-    if cases[i-1][j-1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    # Je sais pas non plus si c'est a moi de faire cette modif ou à l'automate,
-    # dans le doute je l'ai fait au pire on aura juste a modifier
-    # ces lignes de code par automate().
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i][j-1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i+1][j-1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i - 1][j] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i + 1][j] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i - 1][j + 1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i][j + 1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i + 1][j + 1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i][j+1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-    if cases[i+1][j+1] >= 5:
-        cases[i][j][0] = "#1D87E0"
-    else:
-        cases[i][j][0] = "#157120"
-
-
-def automate():
-    pass
+    automate()
 
 
 def taille_grille():
@@ -157,6 +122,7 @@ def deplacement():
 
 
 def sauvegarde_terrain():
+    """Permet de sauvegarder le terrain dans un txt."""
     fic = open("sauvegarde.txt", "w")
     for i in range(len(cases)):
         for j in range(len(cases[i])):
@@ -169,6 +135,7 @@ def sauvegarde_terrain():
 
 
 def charger_terrain():
+    """Charge un terrain depuis le txt."""
     global cases
     cases = []
     sous_liste = []
@@ -188,11 +155,8 @@ def charger_terrain():
 
 # Programme principal #
 
-# Bon là tout ça faudra changer mais là j'ai eu la flemme
-
-
 bouton1 = tk.Button(racine, text="Génération de terrain aléatoire",
-                    font=("helvetica", "10"), command=generer_terrain_initial)
+                    font=("helvetica", "10"), command=generer_terrain)
 bouton1.place(x=0, y=100)
 
 bouton2 = tk.Button(racine, text="Sauvegarde du terrain",
@@ -203,12 +167,8 @@ bouton3 = tk.Button(racine, text="Charger un terrain",
                     font=("helvetica", "10"), command=charger_terrain)
 bouton3.place(x=0, y=160)
 
-bouton5 = tk.Button(racine, text="Démarrer la simulation",
-                    font=("helvetica", "10"))
-bouton5.place(x=0, y=230)
-
-bouton6 = tk.Button(racine, text="Stopper la simulation",
-                    font=("helvetica", "10"))
-bouton6.place(x=0, y=260)
+bouton4 = tk.Button(racine, text="Automate (Moore)",
+                    font=("helvetica", "10"), command=automate)
+bouton4.place(x=0, y=190)
 
 racine.mainloop()
