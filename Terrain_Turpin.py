@@ -1,3 +1,16 @@
+######################################
+# Groupe BI 2
+# Lenny BACKORY
+# Andrew BAYISSA
+# Joris ANGAMAN
+# Martin DIAMANT
+# Amel LASSAL
+# Thomas TURPIN
+# https://github.com/uvsq22004392/projet_incendie
+######################################
+
+# Importation des libraires #
+
 import tkinter as tk
 import random as rd
 
@@ -36,7 +49,6 @@ def proba_eau():
 
 def couleur(lieu):
     """Retourne la couleur en fonction de la case."""
-    #Bon là la fonction est pas très utile je verrai ce qu'on en fait plus tard
     if lieu == "terre":
         return "#157120"
     if lieu == "prairie":
@@ -59,7 +71,6 @@ def refresh():
 
 def generer_terrain_initial():
     """Fonctions proba_eau() puis refresh()."""
-    #à compléter par la suite
     global cases
     cases = []
     cases = [[proba_eau() for i in range(LARGEUR // TAILLE_CASE)]
@@ -68,7 +79,55 @@ def generer_terrain_initial():
 
 
 def moore(i, j):
-    pass
+    # Premier essai de moore, je sais pas si je dois check avec case[i][j]
+    # ou juste avec i et j comme coordonnées,
+    # au final ca reviendra au même c'est juste une forêt de if.
+
+    # Je viens de me rendre compte que j'ai aucune idée d'ou est stockée T,
+    # je laisse ma fonction dans le doute, je la changerais
+    # quand je saurais ou sont stocké les T.
+    if cases[i-1][j-1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    # Je sais pas non plus si c'est a moi de faire cette modif ou à l'automate,
+    # dans le doute je l'ai fait au pire on aura juste a modifier
+    # ces lignes de code par automate().
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i][j-1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i+1][j-1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i - 1][j] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i + 1][j] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i - 1][j + 1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i][j + 1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
+
+    if cases[i + 1][j + 1] >= 5:
+        cases[i][j][0] = "#1D87E0"
+    else:
+        cases[i][j][0] = "#157120"
 
 
 def automate():
@@ -117,45 +176,9 @@ def charger_terrain():
     refresh()
 
 
-#def etape_suivante():
-#    """Gère le déroulement de la simulation."""
-#    global cases
-#    for i in range(1, HAUTEUR // TAILLE_CASE - 1):
-#        for j in range(1, LARGEUR // TAILLE_CASE - 1):
-#            if cases[i][j][0] == 'foret':
-#                nf = 0
-#                if cases[i-1][j][0] == 'feu':
-#                    nf += 1
-#                if cases[i+1][j][0] == 'feu':
-#                    nf += 1
-#                if cases[i][j+1][0] == 'feu':
-#                    nf += 1
-#                if cases[i-1][j-1][0] == 'feu':
-#                    nf += 1
-#                if etat_foret(nf) == "feu":
-#                    cases[i][j] = ["feu", DUREE_FEU]
-#            elif cases[i][j][0] == 'prairie':
-#                if cases[i-1][j][0] == 'feu' or cases[i+1][j][0] == 'feu' \
-#                        or cases[i][j+1][0] == 'feu' \
-#                        or cases[i][j-1][0] == 'feu' \
-#                        or cases[i-1][j][0] == 'feu' \
-#                        or cases[i+1][j][0] == 'feu':
-#                    cases[i][j] = ["feu", DUREE_FEU]
-#            if cases[i][j][0] == "feu":
-#                cases[i][j][1] += -1
-#                if cases[i][j][1] <= 0:
-#                    cases[i][j][0], cases[i][j][1] = "cendres", DUREE_CENDRES
-#            elif cases[i][j][0] == "cendres":
-#                cases[i][j][1] += -1
-#                if cases[i][j][1] <= 0:
-#                    cases[i][j] = ["cendres_eteintes"]
-#
-#    refresh()
-
-
 # Programme principal #
 
-#Bon là tout ça faudra changer mais là j'ai eu la flemme
+# Bon là tout ça faudra changer mais là j'ai eu la flemme
 
 
 bouton1 = tk.Button(racine, text="Génération de terrain aléatoire",
@@ -169,10 +192,6 @@ bouton2.place(x=0, y=130)
 bouton3 = tk.Button(racine, text="Charger un terrain",
                     font=("helvetica", "10"), command=charger_terrain)
 bouton3.place(x=0, y=160)
-
-#bouton4 = tk.Button(racine, text="Prochaine étape",
-                    #font=("helvetica", "10"), command=etape_suivante)
-#bouton4.place(x=0, y=200)
 
 bouton5 = tk.Button(racine, text="Démarrer la simulation",
                     font=("helvetica", "10"))
