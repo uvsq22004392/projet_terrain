@@ -4,7 +4,7 @@ import random as rd
 # Définition des constantes #
 
 LARGEUR, HAUTEUR = 500, 500
-TAILLE_CASE = 2z0
+TAILLE_CASE = 20
 
 # Définition des variables globales #
 
@@ -79,14 +79,34 @@ def automate ():
 def taille_grille():
     pass
 
+#################################################################
+### Fonctions création du personnage et déplacement
 
-def creation_personnage():
-    pass
+CHARACTER = False
+def personnage(event):
+    """Créer un personnage en Unicode dans un point donnée lors d'un clic gauche de la souris"""
+    global CHARACTER
+    if CHARACTER:
+        return
+    else:
+        i=event.x
+        j=event.y
+        print("clic aux coordonnées event  ", event.x , event.y)
+        print("clic aux coordonnées i et j ", i , j)
+        #canvas.create_text(int(j/20),int(i/20), text = "👽")
+        personnage = tk.Label(racine, text="👽")
+        personnage.place( x=i,y=j) #x=(i%20)*20,y=(j%20)*20
+        CHARACTER = True
+
 
 
 def deplacement():
-    pass
+    if lieu == "terre":
+        personnage[0]
+        personnage[1]
 
+
+#########################################################################
 
 def sauvegarde_terrain():
     pass
@@ -133,6 +153,9 @@ def charger_terrain():
 
 
 # Programme principal #
+
+# Liaison des évenements
+canvas.bind("<Button-1>", personnage)
 
 #Bon là tout ça faudra changer mais là j'ai eu la flemme
 bouton1 = tk.Button(racine, text="Génération de terrain aléatoire",
