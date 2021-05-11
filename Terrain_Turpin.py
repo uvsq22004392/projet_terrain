@@ -28,6 +28,8 @@ p = 50  # Probabilité qu'une case soit de l'eau
 n = 4  # Nombre d'applications de l'automate
 k = 1  # Taille voisinage pour Moore
 personnage = []
+emplacement_personnage = []
+ancien_emplacement_personnage = []
 
 racine = tk.Tk()
 
@@ -58,6 +60,21 @@ def couleur(lieu):
         return "#1D87E0"
 
 
+def refresh_personnage():
+    global emplacement_personnage
+    global personnage
+    if personnage != []:  # Si il y a un personnage
+        emplacement_personnage.append(canvas2.create_rectangle(
+                                 personnage[0] * TAILLE_CASE,
+                                 personnage[1] * TAILLE_CASE,
+                                 personnage[0] * TAILLE_CASE + TAILLE_CASE,
+                                 personnage[1] * TAILLE_CASE + TAILLE_CASE,
+                                 fill="red",
+                                 width=0))
+        if len(emplacement_personnage) >= 2:
+            canvas2.delete(emplacement_personnage[-2])
+
+
 def refresh():
     """Redessine le terrain."""
     for i in range(HAUTEUR // TAILLE_CASE):
@@ -68,13 +85,7 @@ def refresh():
                                      j * TAILLE_CASE + TAILLE_CASE),
                                     fill=couleur(cases[i][j][0]),
                                     width=0)
-    if personnage != []:  # Si il y a un personnage
-        canvas2.create_rectangle(personnage[0] * TAILLE_CASE,
-                                 personnage[1] * TAILLE_CASE,
-                                 personnage[0] * TAILLE_CASE + TAILLE_CASE,
-                                 personnage[1] * TAILLE_CASE + TAILLE_CASE,
-                                 fill="red",
-                                 width=0)
+    refresh_personnage()
 
 
 def moore(i, j):
@@ -148,22 +159,24 @@ def creation_personnage(event):
         # Et que l'on clique sur de la terre
         # Et qu'il n'y a pas déjà un personnage
         personnage = [x, y]
-        refresh()  # Ça permet d'afficher le personnage
+        refresh_personnage()  # Ça permet d'afficher le personnage
 
 
 def deplacement(event):
     """Déplace le personnage en fonction de la flèche appuiyée."""
     # Etant optimisée avec le cul, la fonction lag ses morts.
     global personnage
+    global ancien_emplacement_personnage
     direction = event.keysym  # Récupère la touche appuyée
     i, j = personnage[0], personnage[1]
+    ancien_emplacement_personnage.append([i, j])  # Retiens les déplacements
     if direction == "Up":
         j += -1
         if j < 0:  # Evite d'aller out of range
             j += 1
     elif direction == "Down":
         j += 1
-        if j > HAUTEUR // TAILLE_CASE:
+        if j >= HAUTEUR // TAILLE_CASE:
             j += -1
     elif direction == "Left":
         i += -1
@@ -171,12 +184,25 @@ def deplacement(event):
             i += 1
     elif direction == "Right":
         i += 1
-        if i < LARGEUR // TAILLE_CASE:
+        if i >= LARGEUR // TAILLE_CASE:
             i += -1
     if cases[i][j] == ["terre"]:
+        # Ne se déplace pas sur l'eau
         personnage[0], personnage[1] = i, j
-    # NB : Vérifier les if i<0 etc parce que je suis nul avec ça
-    refresh()
+    refresh_personnage()
+
+
+def annuler_deplacement():
+    """Utilise ancien_emplacement_personnage pour annuler un déplacement."""
+    global personnage
+    global ancien_emplacement_personnage
+    if ancien_emplacement_personnage == []:  # Empêche les erreurs
+        pass
+    else:
+        personnage[0] = ancien_emplacement_personnage[-1][0]
+        personnage[1] = ancien_emplacement_personnage[-1][1]
+        del ancien_emplacement_personnage[-1]
+        refresh_personnage()
 
 
 def sauvegarde_terrain():
@@ -240,6 +266,10 @@ bouton3.place(x=0, y=160)
 bouton4 = tk.Button(racine, text="Automate (Moore)",
                     font=("helvetica", "10"), command=automate)
 bouton4.place(x=0, y=190)
+
+bouton5 = tk.Button(racine, text="Annuler déplacement",
+                    font=("helvetica", "10"), command=annuler_deplacement)
+bouton5.place(x=0, y=220)
 
 canvas2.bind("<Button-1>", creation_personnage)
 canvas2.focus_set()  # Pas trop compris pourquoi mais ça marche quand c'est là
