@@ -149,23 +149,28 @@ def taille_grille():
     pass
 
 #################################################################
-### Fonctions création du personnage et déplacement
+# Fonctions création du personnage et déplacement
+
 
 CHARACTER = False
-def personnage(event):
-    """Créer un personnage en Unicode dans un point donnée lors d'un clic gauche de la souris"""
+
+
+def creer_personnage_bis(event):
+    """Créer un personnage en Unicode dans un point donnée lors
+       d'un clic gauche de la souris"""
     global CHARACTER
     if CHARACTER:
         return
     else:
-        i=event.x
-        j=event.y
-        print("clic aux coordonnées event  ", event.x , event.y)
-        print("clic aux coordonnées i et j ", i , j)
-        #canvas.create_text(int(j/20),int(i/20), text = "👽")
+        i = event.x
+        j = event.y
+        print("clic aux coordonnées event  ", event.x, event.y)
+        print("clic aux coordonnées i et j ", i, j)
+        # canvas.create_text(int(j/20),int(i/20), text = "👽")
         personnage = tk.Label(racine, text="👽")
-        personnage.place( x=i,y=j) #x=(i%20)*20,y=(j%20)*20
+        personnage.place(x=i, y=j)  # x=(i%20)*20,y=(j%20)*20
         CHARACTER = True
+
 
 def creation_personnage(event):
     """Crée un personnage aux coordonnées du curseur."""
@@ -225,6 +230,7 @@ def annuler_deplacement():
 
 #########################################################################
 
+
 def sauvegarde_terrain():
     """Permet de sauvegarder le terrain dans un txt. cases est écrit sur
        la première ligne, personnage sur la seconde."""
@@ -271,11 +277,11 @@ def charger_terrain():
 
 # Programme principal #
 
-#<<<<<<< HEAD
+# <<<<<<< HEAD
 # Liaison des évenements
 canvas.bind("<Button-1>", personnage)
 
-#Bon là tout ça faudra changer mais là j'ai eu la flemme
+# Bon là tout ça faudra changer mais là j'ai eu la flemme
 
 bouton1 = tk.Button(racine, text="Génération de terrain aléatoire",
                     font=("helvetica", "10"), command=generer_terrain)
