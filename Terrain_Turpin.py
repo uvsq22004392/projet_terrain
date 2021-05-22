@@ -13,7 +13,6 @@
 
 import tkinter as tk
 import random as rd
-
 # Définition des constantes #
 
 LARGEUR, HAUTEUR = 500, 500
@@ -29,11 +28,9 @@ p = 50  # Probabilité qu'une case soit de l'eau
 n = 4  # Nombre d'applications de l'automate
 k = 1  # Taille voisinage pour Moore
 personnage = []
-emplacement_personnage = []
 ancien_emplacement_personnage = []
-
 racine = tk.Tk()
-
+global pk
 canvas = tk.Canvas(racine, height=LARGEUR, width=LARGEUR//2, bg="white")
 canvas.grid(column=0)
 canvas2 = tk.Canvas(racine, height=LARGEUR, width=HAUTEUR, bg="white")
@@ -62,18 +59,16 @@ def couleur(lieu):
 
 
 def refresh_personnage():
-    global emplacement_personnage
+    """Créer un personnage en unicode"""
     global personnage
+    global pk
     if personnage != []:  # Si il y a un personnage
-        emplacement_personnage.append(canvas2.create_rectangle(
-                                 personnage[0] * TAILLE_CASE,
-                                 personnage[1] * TAILLE_CASE,
-                                 personnage[0] * TAILLE_CASE + TAILLE_CASE,
-                                 personnage[1] * TAILLE_CASE + TAILLE_CASE,
-                                 fill="red",
-                                 width=0))
-        if len(emplacement_personnage) >= 2:
-            canvas2.delete(emplacement_personnage[-2])
+        a=personnage[0] #coordonnées x du curseur
+        b=personnage[1] #coordonnées y du curseur
+        pk = canvas2.create_text( (a*10+6, b*10),text="\U0001F47D", font="MSGothic 9")
+    
+        
+    
 
 
 def refresh():
@@ -151,24 +146,8 @@ def taille_grille():
 #################################################################
 ### Fonctions création du personnage et déplacement
 
-CHARACTER = False
-def personnage(event):
-    """Créer un personnage en Unicode dans un point donnée lors d'un clic gauche de la souris"""
-    global CHARACTER
-    if CHARACTER:
-        return
-    else:
-        i=event.x
-        j=event.y
-        print("clic aux coordonnées event  ", event.x , event.y)
-        print("clic aux coordonnées i et j ", i , j)
-        #canvas.create_text(int(j/20),int(i/20), text = "👽")
-        personnage = tk.Label(racine, text="👽")
-        personnage.place( x=i,y=j) #x=(i%20)*20,y=(j%20)*20
-        CHARACTER = True
-
 def creation_personnage(event):
-    """Crée un personnage aux coordonnées du curseur."""
+    """Affiche le personnage aux coordonnées du curseur."""
     global personnage
     x, y = event.x // TAILLE_CASE, event.y // TAILLE_CASE
     # Permet d'avoir des coordonnées entières
@@ -178,13 +157,20 @@ def creation_personnage(event):
         # Et que l'on clique sur de la terre
         # Et qu'il n'y a pas déjà un personnage
         personnage = [x, y]
-        refresh_personnage()  # Ça permet d'afficher le personnage
+        refresh_personnage()  # Permet d'afficher le personnage
 
+def effacer(event):
+    """Retire et replace le personnage"""
+    #Retire le personnage quand on clique dessus avec double click
+    global personnage
+    personnage= []
+    canvas2.delete(pk)
+    
 
 def deplacement(event):
-    """Déplace le personnage en fonction de la flèche appuiyée."""
-    # Etant optimisée avec le cul, la fonction lag ses morts.
+    """Déplace le personnage en fonction de la flèche appuyée."""
     global personnage
+    global pk
     global ancien_emplacement_personnage
     direction = event.keysym  # Récupère la touche appuyée
     i, j = personnage[0], personnage[1]
@@ -192,7 +178,7 @@ def deplacement(event):
     if direction == "Up":
         j += -1
         if j < 0:  # Evite d'aller out of range
-            j += 1
+            j += 1    
     elif direction == "Down":
         j += 1
         if j >= HAUTEUR // TAILLE_CASE:
@@ -208,6 +194,7 @@ def deplacement(event):
     if cases[i][j] == ["terre"]:
         # Ne se déplace pas sur l'eau
         personnage[0], personnage[1] = i, j
+    canvas2.delete(pk)
     refresh_personnage()
 
 
@@ -221,7 +208,8 @@ def annuler_deplacement():
         personnage[0] = ancien_emplacement_personnage[-1][0]
         personnage[1] = ancien_emplacement_personnage[-1][1]
         del ancien_emplacement_personnage[-1]
-        refresh_personnage()
+    canvas2.delete(pk)
+    refresh_personnage()
 
 #########################################################################
 
@@ -271,9 +259,6 @@ def charger_terrain():
 
 # Programme principal #
 
-#<<<<<<< HEAD
-# Liaison des évenements
-canvas.bind("<Button-1>", personnage)
 
 #Bon là tout ça faudra changer mais là j'ai eu la flemme
 
@@ -297,9 +282,12 @@ bouton5 = tk.Button(racine, text="Annuler déplacement",
                     font=("helvetica", "10"), command=annuler_deplacement)
 bouton5.place(x=0, y=220)
 
+#Liaison des evenements
+
 canvas2.bind("<Button-1>", creation_personnage)
 canvas2.focus_set()  # Pas trop compris pourquoi mais ça marche quand c'est là
 # Si c'est pas là le bind des touches marche pas donc bon ^^
 canvas2.bind("<Key>", deplacement)
+canvas2.bind("<Double-Button-1>", effacer)
 
 racine.mainloop()
