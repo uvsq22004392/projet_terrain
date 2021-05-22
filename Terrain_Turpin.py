@@ -147,29 +147,6 @@ def taille_grille():
 # Fonctions création du personnage et déplacement
 
 
-<<<<<<< HEAD
-=======
-CHARACTER = False
-
-
-def creer_personnage_bis(event):
-    """Créer un personnage en Unicode dans un point donnée lors
-       d'un clic gauche de la souris"""
-    global CHARACTER
-    if CHARACTER:
-        return
-    else:
-        i = event.x
-        j = event.y
-        print("clic aux coordonnées event  ", event.x, event.y)
-        print("clic aux coordonnées i et j ", i, j)
-        # canvas.create_text(int(j/20),int(i/20), text = "👽")
-        personnage = tk.Label(racine, text="👽")
-        personnage.place(x=i, y=j)  # x=(i%20)*20,y=(j%20)*20
-        CHARACTER = True
-
-
->>>>>>> d87483a8aa845326dfc351beaed5e07b65a3009b
 def creation_personnage(event):
     """Affiche le personnage aux coordonnées du curseur."""
     global personnage
@@ -252,7 +229,9 @@ def sauvegarde_terrain():
         fic.write("/")  # On écrit / pour signifier la fin d'une ligne
     fic.write("\n")  # Va à la ligne
     fic.write(str(personnage[0]))  # Sauvegarde le personnage
+    fic.write(",")
     fic.write(str(personnage[1]))  # Sauvegarde le personnage
+    fic.write(".")
     fic.close()  # On ferme le fichier (IMPORTANT)
 
 
@@ -260,6 +239,10 @@ def charger_terrain():
     """Charge un terrain depuis le txt."""
     global cases
     global personnage
+    global posx
+    global posy
+    posx = ""
+    posy = ""
     cases = []  # On vide le terrain actuel
     sous_liste = []  # Sous-liste que l'on placera dans cases
     fic = open("sauvegarde.txt", "r")
@@ -276,20 +259,29 @@ def charger_terrain():
     # On ajoute les cases à une sous-liste que l'on place dans
     # la liste cases, puis on efface la sous-liste quand on voit /
     # et on recommance.
+
     perso = fic.readline()  # Lis la deuxième ligne
-    personnage = [int(perso[0]), int(perso[1])]  # Charge le personnage
+    i = 0
+    while perso[i] != ",":
+        if perso[i-1] == ",":
+            break
+        posx += perso[i]
+        i += 1
+    while perso[i] != ".":
+        if perso[i] == ",":
+            i += 1
+        posy += perso[i]
+        i += 1
+    personnage[0] = int(posx)
+    personnage[1] = int(posy)
+    #print(posx, posy)
+    #print(personnage[0], personnage[1])
     fic.close()  # Bien penser à fermer le fichier !
     refresh()  # On actualise pour pouvoir voir le résultat.
 
 
 # Programme principal #
 
-<<<<<<< HEAD
-=======
-# <<<<<<< HEAD
-# Liaison des évenements
-canvas.bind("<Button-1>", personnage)
->>>>>>> d87483a8aa845326dfc351beaed5e07b65a3009b
 
 # Bon là tout ça faudra changer mais là j'ai eu la flemme
 
