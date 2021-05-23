@@ -77,7 +77,7 @@ def refresh_personnage():
     if personnage != []:  # Si il y a un personnage
         a = personnage[0]  # coordonnées x du curseur
         b = personnage[1]  # coordonnées y du curseur
-        pk = canvas2.create_text( (a*TAILLE_CASE+6, b*TAILLE_CASE),text="\U0001F47D", fill= "red", font="MSGothic "+str(TAILLE_CASE-1))
+        pk = canvas2.create_text( (a*TAILLE_CASE+(TAILLE_CASE/2), b*TAILLE_CASE),text="\U0001F47D", fill= "red", font="MSGothic "+str(TAILLE_CASE-1))
         
 
 def refresh():
