@@ -17,10 +17,10 @@ Le bouton "Automate (Moore)" permet d'appliquer l'automate de génération de te
 Enfin, le bouton "Annuler déplacement" permet d'annuler le déplacement du personnage.
 
 
-Lorsque le terrain a été généré, vous pouvez cliquer sur une case de terre (les cases vertes) afin d'y placer un personnage (symbolisé par un carré rouge).
+Lorsque le terrain a été généré, vous pouvez cliquer sur une case de terre (les cases vertes) afin d'y placer un personnage.
 Vous pouvez alors déplacer le-dit personnage grâce aux flèches de direction de votre clavier. Gardez en tête le fait que vous ne pouvez pas vous rendre sur les cases d'eau.
 
-Si vous retirer votre personnage du jeu, vous pouvez faire un double-clic gauche sur le terrain, qui supprimera votre personnage.
+Si vous voulez retirer votre personnage du jeu, vous pouvez faire un double-clic gauche sur le terrain, qui supprimera votre personnage.
 
 # Crédits : 
 - Martin DIAMANT (chef de projet et responsable de la relecture flake8)
