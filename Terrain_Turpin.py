@@ -196,7 +196,7 @@ def creation_personnage(event):
 
 def effacer(event):
     """Retire et replace le personnage"""
-    # Retire le personnage quand on clique dessus avec double click
+    # Retire le personnage quand on clique sur le terrain avec double click
     global personnage
     personnage = []
     canvas2.delete(pk)
